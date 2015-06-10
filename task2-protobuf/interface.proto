@@ -1,0 +1,17 @@
+
+message Tag {
+
+	required string text = 1;
+	
+	optional string url = 2;
+	optional int32 font_size = 3;
+	optional int32 rotation = 4;
+	optional bytes font_color = 5;
+
+}
+
+message TagCloud {
+
+	repeated Tag tag = 1;
+
+}

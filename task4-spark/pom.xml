@@ -1,0 +1,15 @@
+<project>
+  <groupId>blah-blah</groupId>
+  <artifactId>tf-idf</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>blah-blah-blah</name>
+  <packaging>jar</packaging>
+  <version>1.0</version>
+  <dependencies>
+    <dependency> <!-- Spark dependency -->
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.10</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+  </dependencies>
+</project>
