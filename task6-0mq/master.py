@@ -5,6 +5,7 @@ import zmq
 import sys
 import socket, select
 import random
+import re
 
 context = zmq.Context()
 
@@ -30,8 +31,7 @@ connections = {}
 requests = {}
 responses = {}
 
-response = b'HTTP/1.0 200 OK\n'
-response += b'Content-Type: text/plain\n\n'
+get_re = re.compile("GET\s*\/([^\s?]*).*")
 
 counter = 0
 
@@ -57,14 +57,17 @@ try:
 				
 				if b'\n\n' in requests[fileno] or '\n\r\n' in requests[fileno]:
 
-					print "\nclient: " + str(fileno)
-					print requests[fileno].decode()
+					info = requests[fileno].decode()
 
-					info = str(random.randint(1, 6))
+					print "client: %s; msg: %s" % ( str(fileno), info )
 
-					print "client: %s; random-msg: %s" % ( str(fileno), info )
+					m = get_re.match(info)
+					if m:
+						name = m.group(1)
+					else:
+						name = ''
 
-					zmqsocket.send_string(str(fileno) + ' ' + info)
+					zmqsocket.send_string(str(fileno) + ' ' + name)
 
 					counter += 1
 
@@ -92,12 +95,10 @@ try:
 				del responses[fileno]
 
 		if (counter > 0):
-			s = zmqreceiver.recv().split()
+			s = zmqreceiver.recv().split("\n", 1)
 			responses[int(s[0])] = s[1]
 
 			counter -= 1
-			
-			print "worker: " + s[1].decode()
 
 except KeyboardInterrupt:
 	
